@@ -1,7 +1,7 @@
 package org.example.exceptions;
 
-public class EmailAlreadyExists extends RuntimeException {
-    public EmailAlreadyExists(String message) {
+public class EmailAlreadyExistsException extends RuntimeException {
+    public EmailAlreadyExistsException(String message) {
         super(message);
     }
 }

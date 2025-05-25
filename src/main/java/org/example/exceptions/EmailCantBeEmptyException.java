@@ -1,7 +1,7 @@
 package org.example.exceptions;
 
-public class EmailCantBeEmpty extends RuntimeException {
-  public EmailCantBeEmpty(String message) {
-    super(message);
-  }
+public class EmailCantBeEmptyException extends RuntimeException {
+    public EmailCantBeEmptyException(String message) {
+        super(message);
+    }
 }
