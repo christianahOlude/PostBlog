@@ -13,8 +13,8 @@ import org.example.dto.responses.UserRegistrationResponse;
 import org.example.exceptions.EmailCantBeEmptyException;
 import org.example.exceptions.EmailNotFoundException;
 import org.example.exceptions.InvalidPasswordException;
+import org.example.utils.PasswordUtil;
 import org.example.utils.userMapper.UserMapper;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,8 @@ import org.springframework.stereotype.Service;
     public UserRegistrationResponse registration(UserRegistrationRequest userRegistrationRequest) {
         String emailAddress = userRegistrationRequest.getEmailAddress();
         if(emailAddress == null || emailAddress.isEmpty()) throw new EmailCantBeEmptyException("Email address can't be empty");
-//        if(emailAddress equals(userRegistrationRequest.getEmailAddress())) throw new EmailAlreadyExistsException("Email address already exists");
+        String passwordEncrypt = PasswordUtil.hashPassword(userRegistrationRequest.getPassword());
+        userRegistrationRequest.setPassword(passwordEncrypt);
         User newUser = UserMapper.mapUserToRegisterRequest(userRegistrationRequest);
         userRepository.save(newUser);
         return UserMapper.mapRegisterToResponse(newUser);
@@ -41,7 +42,7 @@ import org.springframework.stereotype.Service;
         User foundUser = userRepository.findByEmail(userLoginRequest.getEmailAddress())
                 .orElseThrow(() -> new EmailNotFoundException("Email address not found"));
 
-        boolean passwordMatches = BCrypt.checkpw(userLoginRequest.getPassword(), foundUser.getPassword());
+        boolean passwordMatches = PasswordUtil.checkPassword(userLoginRequest.getPassword(), foundUser.getPassword());
 
         if (!passwordMatches) {
             throw new  InvalidPasswordException("Incorrect password");
@@ -53,8 +54,8 @@ import org.springframework.stereotype.Service;
 
     @Override
     public UserPostResponse postBlog(UserPostRequest userPostRequest) {
-        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest();
-        userPostRequest.setEmail(userRegistrationRequest.getEmailAddress());
+//        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest();
+//        userPostRequest.setEmail(userRegistrationRequest.getEmailAddress());
         Post newPost = UserMapper.mapPostToRequest(userPostRequest);
         postRepository.save(newPost);
         return UserMapper.mapPostToResponse(newPost);

@@ -1,6 +1,5 @@
 package org.example.services;
 
-import org.example.data.models.User;
 import org.example.data.repositories.PostRepository;
 import org.example.data.repositories.UserRepository;
 import org.example.dto.requests.UserLoginRequest;
@@ -9,7 +8,6 @@ import org.example.dto.requests.UserRegistrationRequest;
 import org.example.dto.responses.UserLoginResponse;
 import org.example.dto.responses.UserPostResponse;
 import org.example.dto.responses.UserRegistrationResponse;
-import org.example.utils.userMapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +65,9 @@ class UserServiceImplTest {
         UserLoginRequest userLoginRequest = new UserLoginRequest();
         getRegisteredUser(userLoginRequest);
         UserLoginResponse response = userService.login(userLoginRequest);
-//        String expect = userLoginRequest.getEmailAddress();
-//        assertEquals(expect, response.getEmailAddress());
-//        assertEquals("LoggedIn Successfully", response.getMessage());
+        String expect = userLoginRequest.getEmailAddress();
+        assertEquals(expect, response.getEmailAddress());
+        assertEquals("LoggedIn Successfully", response.getMessage());
     }
     @Test
     void post() {

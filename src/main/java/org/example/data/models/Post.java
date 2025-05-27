@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Post {
     private String id;
+    private User user;
     private String title;
     private String description;
 }

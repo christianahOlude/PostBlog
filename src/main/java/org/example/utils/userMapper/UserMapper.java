@@ -2,21 +2,17 @@ package org.example.utils.userMapper;
 
 import org.example.data.models.Post;
 import org.example.data.models.User;
-import org.example.dto.requests.UserLoginRequest;
 import org.example.dto.requests.UserPostRequest;
 import org.example.dto.requests.UserRegistrationRequest;
 import org.example.dto.responses.UserLoginResponse;
 import org.example.dto.responses.UserPostResponse;
 import org.example.dto.responses.UserRegistrationResponse;
-import org.example.utils.PasswordUtil;
 
 public class UserMapper {
     public static User mapUserToRegisterRequest(UserRegistrationRequest userRegistrationRequest) {
         User user = new User();
         user.setName(userRegistrationRequest.getName());
-        String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
-        user.setPassword(hashedPassword);
-//        user.setPassword(userRegistrationRequest.getPassword());
+        user.setPassword(userRegistrationRequest.getPassword());
         user.setEmail(userRegistrationRequest.getEmailAddress());
         return user;
     }
@@ -35,6 +31,7 @@ public class UserMapper {
     }
     public static Post mapPostToRequest(UserPostRequest userPostRequest) {
         Post post = new Post();
+        post.setUser(userPostRequest.getUser());
         post.setTitle(userPostRequest.getTitle());
         post.setDescription(userPostRequest.getDescription());
         return post;
