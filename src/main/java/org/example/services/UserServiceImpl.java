@@ -54,10 +54,11 @@ import org.springframework.stereotype.Service;
 
     @Override
     public UserPostResponse postBlog(UserPostRequest userPostRequest) {
-//        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest();
-//        userPostRequest.setEmail(userRegistrationRequest.getEmailAddress());
+        String email = userPostRequest.getEmailAddress();
+        System.out.println("Looking for user with email: " + email);
         Post newPost = UserMapper.mapPostToRequest(userPostRequest);
         postRepository.save(newPost);
         return UserMapper.mapPostToResponse(newPost);
     }
+
 }

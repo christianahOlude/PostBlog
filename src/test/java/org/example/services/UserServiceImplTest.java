@@ -8,10 +8,13 @@ import org.example.dto.requests.UserRegistrationRequest;
 import org.example.dto.responses.UserLoginResponse;
 import org.example.dto.responses.UserPostResponse;
 import org.example.dto.responses.UserRegistrationResponse;
+import org.example.exceptions.EmailNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +35,7 @@ class UserServiceImplTest {
     void clearItemRepo() {
         postRepository.deleteAll();
     }
-    UserRegistrationRequest userRegistrationRequest;
+
 
     public void setNewUser(UserRegistrationRequest userRegistrationRequest) {
         userRegistrationRequest.setName("name");
@@ -52,6 +55,18 @@ class UserServiceImplTest {
         String expected = userRegistrationRequest.getEmailAddress();
         assertEquals(expected, response.getEmailAddress());
         assertEquals("Registration Successful", response.getMessage());
+
+    }
+
+    @Test
+    void throwExceptionIfUserAlreadyExists() {
+        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest();
+        setNewUser(userRegistrationRequest);
+        UserPostRequest userPostRequest = new UserPostRequest();
+        userPostRequest.setEmailAddress("nonexistent@example.com");
+        userPostRequest.setTitle("Test Title");
+        userPostRequest.setDescription("Test Description");
+        assertThrows(EmailNotFoundException.class, () -> userService.postBlog(userPostRequest));
 
     }
     @Test
@@ -74,8 +89,12 @@ class UserServiceImplTest {
         UserPostRequest userPostRequest = new UserPostRequest();
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest();
         setNewUser(userRegistrationRequest);
+        UserLoginRequest userLoginRequest = new UserLoginRequest();
+        getRegisteredUser(userLoginRequest);
+        userPostRequest.setEmailAddress("email@gmail.com");
         userPostRequest.setTitle("title");
         userPostRequest.setDescription("description");
+        userPostRequest.setCreatedAt(LocalDateTime.now());
         UserPostResponse userPostResponse = userService.postBlog(userPostRequest);
         System.out.println(userPostRequest);
         assertNotNull(userRegistrationRequest.getEmailAddress());

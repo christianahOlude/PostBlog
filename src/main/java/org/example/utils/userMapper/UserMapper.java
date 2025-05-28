@@ -8,6 +8,8 @@ import org.example.dto.responses.UserLoginResponse;
 import org.example.dto.responses.UserPostResponse;
 import org.example.dto.responses.UserRegistrationResponse;
 
+import java.time.LocalDateTime;
+
 public class UserMapper {
     public static User mapUserToRegisterRequest(UserRegistrationRequest userRegistrationRequest) {
         User user = new User();
@@ -31,13 +33,16 @@ public class UserMapper {
     }
     public static Post mapPostToRequest(UserPostRequest userPostRequest) {
         Post post = new Post();
-        post.setUser(userPostRequest.getUser());
+        post.setEmailAddress(userPostRequest.getEmailAddress());
         post.setTitle(userPostRequest.getTitle());
         post.setDescription(userPostRequest.getDescription());
+        post.setCreatedAt(LocalDateTime.now());
         return post;
     }
     public static UserPostResponse mapPostToResponse(Post newPost) {
         UserPostResponse userPostResponse = new UserPostResponse();
+        userPostResponse.setCreatedAt(LocalDateTime.now());
+        userPostResponse.setEmailAddress(newPost.getEmailAddress());
         userPostResponse.setMessage("Post Successful");
         return userPostResponse;
     }
